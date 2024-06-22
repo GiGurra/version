@@ -278,7 +278,7 @@ func ParseVersion(versionStr string) Version {
 	return result
 }
 
-func FindLatestVersion[T any](items []T, fGetVersion func(T) Version) *T {
+func FindLatestVersionBy[T any](items []T, fGetVersion func(T) Version) *T {
 
 	if len(items) == 0 {
 		return nil
