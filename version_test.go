@@ -164,6 +164,8 @@ func TestSortByVersion(t *testing.T) {
 		"1.2.3",
 		"1.2.3-beta1",
 		"1.2.1",
+		"1.2.2",
+		"1.2.4",
 		"1.1.1",
 		"1.3.1",
 		"1.2.3-RC1",
@@ -172,11 +174,13 @@ func TestSortByVersion(t *testing.T) {
 	orderedRef := []string{
 		"1.1.1",
 		"1.2.1",
+		"1.2.2",
 		"1.2.3-alpha2",
 		"1.2.3-beta1",
 		"1.2.3-RC1",
 		"1.2.3-RC11",
 		"1.2.3",
+		"1.2.4",
 		"1.3.1",
 	}
 
