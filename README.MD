@@ -68,11 +68,6 @@ Run the tests using:
 go test ./...
 ```
 
-## Dependencies
-
-- [samber/lo](https://github.com/samber/lo) v1.39.0
-- [golang.org/x/exp](https://pkg.go.dev/golang.org/x/exp) (indirect)
-
 ## License
 
 This project is licensed under the MIT License.
