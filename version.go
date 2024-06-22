@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/samber/lo"
 	"log/slog"
+	"slices"
 	"strconv"
 	"strings"
 	"unicode"
@@ -110,11 +111,11 @@ func ParseVersionPart(part string) VersionPart {
 }
 
 func (p VersionPart) IsGreaterOrEqThan(other VersionPart) bool {
-	return p.IsGreaterThan(other) || (!p.IsGreaterThan(other) && !other.IsGreaterThan(p))
+	return p.IsGreaterThan(other) || p.IsSemanticallyEqualTo(other)
 }
 
 func (p VersionPart) IsSemanticallyEqualTo(other VersionPart) bool {
-	return !p.IsGreaterThan(other) && !other.IsGreaterThan(p)
+	return strings.ToLower(p.Raw) == strings.ToLower(other.Raw)
 }
 
 func (p VersionPart) IsLessThan(other VersionPart) bool {
@@ -122,6 +123,7 @@ func (p VersionPart) IsLessThan(other VersionPart) bool {
 }
 
 func (p VersionPart) IsGreaterThan(other VersionPart) bool {
+
 	if p.IsInt && other.IsInt {
 		// Both are regular semantic parts. Just compare the ints
 		return p.IntRepr > other.IntRepr
@@ -296,4 +298,18 @@ func FindLatestVersionBy[T any](items []T, fGetVersion func(T) Version) *T {
 	}
 
 	return latest
+}
+
+func SortByVersion[T any](items []T, fGetVersion func(T) Version) []T {
+	// sort by version
+	slices.SortStableFunc(items, func(a T, b T) int {
+		if fGetVersion(a).IsGreaterThan(fGetVersion(b)) {
+			return 1
+		} else if fGetVersion(b).IsGreaterThan(fGetVersion(a)) {
+			return -1
+		} else {
+			return 0
+		}
+	})
+	return items
 }

@@ -1,6 +1,7 @@
 package version
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 )
@@ -154,4 +155,55 @@ func TestParseVersionMixedLiteralAndNumeric(t *testing.T) {
 		t.Errorf("alpha2 should not be greater or equal to beta1")
 	}
 
+}
+
+func TestSortByVersion(t *testing.T) {
+	unordered := []string{
+		"1.2.3-alpha2",
+		"1.2.3-RC11",
+		"1.2.3",
+		"1.2.3-beta1",
+		"1.2.1",
+		"1.2.3-RC1",
+	}
+
+	orderedRef := []string{
+		"1.2.1",
+		"1.2.3-alpha2",
+		"1.2.3-beta1",
+		"1.2.3-RC1",
+		"1.2.3-RC11",
+		"1.2.3",
+	}
+
+	sorted := SortByVersion(unordered, func(s string) Version {
+		return ParseVersion(s)
+	})
+
+	for i, item := range sorted {
+		fmt.Printf("%v\n", item)
+		if item != orderedRef[i] {
+			t.Errorf("failed to sort versions")
+		}
+	}
+
+}
+
+func TestFindLatestVersionBy(t *testing.T) {
+	versions := []string{
+		"1.2.3-alpha2",
+		"1.2.3-RC11",
+		"1.2.3",
+		"1.2.3-beta1",
+		"1.2.1",
+		"1.2.3-RC1",
+	}
+
+	latest := FindLatestVersionBy(versions, func(s string) Version {
+		return ParseVersion(s)
+	})
+
+	if *latest != "1.2.3" {
+		t.Errorf("failed to find the latest version")
+	}
 }
